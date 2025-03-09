@@ -8,16 +8,26 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <load src="./partials/header.html" icon-path="img/sprite.svg#logo" />
+    <form class="search-form js-search-form">
+      <div class="form-group">
+        <label for="searchQuery" class="sr-only">Что ищем?</label>
+        <input
+          type="text"
+          class="form-control"
+          name="query"
+          id="searchQuery"
+          placeholder="что ищем?"
+          autocomplete="off"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary">Искать</button>
+    </form>
+    <ul class="gallery"></ul>
 
-    <main>
-      <!-- Loads the specified .html file -->
-      <load src="./partials/vite-promo.html" />
-      <load src="./partials/badges.html" />
-    </main>
-
-    <load src="./partials/footer.html" />
-
+    <button type="button" class="btn btn-load-more" data-action="load-more">
+      <span class="loader-span"></span>
+      <span class="label">Загрузить еще</span>
+    </button>
     <script type="module" src="./main.js"></script>
   </body>
 </html>
