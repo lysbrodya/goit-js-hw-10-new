@@ -21,9 +21,8 @@ refs.onLoadMore.addEventListener('click', onLoadMore);
 function onSearch(e) {
   e.preventDefault();
 
-  const form = e.currentTarget;
+  const form = refs.searchForm;
   const input = form.elements.query;
-
   if (input.value === '') {
     iziToast.error({
       title: 'Error',
@@ -36,35 +35,21 @@ function onSearch(e) {
   refs.loaderEl.classList.add('loader');
   clearGallery(refs.gallery);
   refs.onLoadMore.classList.remove('is-hidden');
-  fetchData(input.value, page)
-    .then(data => {
-      console.log(data);
-      renderGallery(data.hits, refs.gallery);
-      page += 1;
-      refs.loaderEl.classList.remove('loader');
-      new SimpleLightbox('.gallery a', {
-        captionsData: 'alt',
-        captionDelay: 500,
-      });
-    })
-    .catch(error => {
-      iziToast.error({
-        title: 'Error',
-        message:
-          'Sorry, there are no images matching your search query. Please try again!',
-      });
-    })
-    .finally(() => {
-      refs.searchBtn.disabled = false;
-    });
+
+  fetchGallery(input.value, page);
 }
 
 function onLoadMore() {
   const form = refs.searchForm;
   const input = form.elements.query;
   refs.loaderEl.classList.add('loader');
-  fetchData(input.value, page).then(data => {
-    console.log(data);
+
+  fetchGallery(input.value, page);
+}
+
+async function fetchGallery(searchQuery, page) {
+  try {
+    const data = await fetchData(searchQuery, page);
     renderGallery(data.hits, refs.gallery);
     page += 1;
     refs.loaderEl.classList.remove('loader');
@@ -72,8 +57,13 @@ function onLoadMore() {
       captionsData: 'alt',
       captionDelay: 500,
     });
-    var gallery = $('.gallery a').simpleLightbox();
-
-    gallery.refresh();
-  });
+  } catch (error) {
+    iziToast.error({
+      title: 'Error',
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+    });
+  } finally {
+    refs.searchBtn.disabled = false;
+  }
 }
